@@ -24,7 +24,19 @@ int main()
         }
         _window.clear();
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            theCar.turnRight();
+            theCar.accelerate();
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            theCar.turnLeft();
+            theCar.accelerate();
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         {
             theCar.accelerate();
         }

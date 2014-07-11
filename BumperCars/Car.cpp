@@ -7,7 +7,7 @@ Car::Car()
     ///position
     posX = 0;
     posY = 0;
-    angle = 0;
+    angle = 45;
     velocity = 0;
     acceleration = 1;
 
@@ -34,7 +34,7 @@ Car::Car(int x, int y)
 {
     posX = x;
     posY = y;
-    angle = 0;
+    angle = 45;
     velocity = 0;
     acceleration = 1;
 
@@ -76,7 +76,7 @@ int Car::draw(sf::RenderWindow* _window)
 
     currentSprite.setTexture(carText);
 
-    std::cout << "row: " << row << " column: " << column << "\n";
+    //std::cout << "row: " << row << " column: " << column << "\n";
 
     //IntRect(left,top,width,height)
     currentSprite.setTextureRect(sf::IntRect(column*76, row*76, 76,76));
@@ -97,14 +97,25 @@ void Car::sync()
 
 void Car::accelerate()
 {
-    if(acceleration < 3)
-        acceleration++;
+    //if(acceleration < 3)
+    //    acceleration++;
 
-    if(velocity < maxSpeed)
-        velocity+=acceleration;
+    //if(velocity < maxSpeed)
+    //    velocity+=acceleration;
 
-    posX+=velocity*cos(angle*PI/180);
-    posY+=velocity*sin(angle*PI/180);
+    velocity = 5;
+
+    //slightly off but not visible enough to matter
+    //the spritesheet is messed up... 0 was North so need to redo
+    //spritesheet where 0 is Right and 90 is North
+    //or else we will always have angle-90 to compensate
+    double velocityX = cos((angle-90)*PI/180.0f)*velocity;
+    double velocityY = sin((angle-90)*PI/180.0f)*velocity;
+
+    std::cout << "velocityX: " << velocityX << "\n";
+    std::cout << "velocityY: " << velocityY << "\n";
+    posX+=velocityX;//velocity*cos((angle-90)*PI/180);
+    posY+=velocityY;//velocity*sin((angle-90)*PI/180);
 }
 
 void Car::decelerate()

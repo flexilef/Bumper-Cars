@@ -34,16 +34,16 @@ private:
 
     const int PI = 3.14159265359;
     ///positional
-    int posX;
-    int posY;
+    double posX;
+    double posY;
     int angle;
-    int velocity;
-    int acceleration;
+    double velocity;
+    double acceleration;
 
     ///properties
-    int maxSpeed;
-    int maxBackThrust;
-    int rotateSpeed;
+    double maxSpeed;
+    double maxBackThrust;
+    double rotateSpeed;
     int maxHealth;
     int mass;
 
