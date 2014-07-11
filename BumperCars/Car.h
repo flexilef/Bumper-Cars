@@ -23,10 +23,16 @@ public:
 
     ///actions
     void drive();
+    void accelerate();
+    void turnRight();
+    void turnLeft();
+    void decelerate();
     int draw(sf::RenderWindow*);
     void sync();
 
 private:
+
+    const int PI = 3.14159265359;
     ///positional
     int posX;
     int posY;

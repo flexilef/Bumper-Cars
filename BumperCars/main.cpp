@@ -23,6 +23,30 @@ int main()
             }
         }
         _window.clear();
+
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        {
+            theCar.accelerate();
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        {
+            theCar.decelerate();
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            theCar.turnRight();
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            theCar.turnLeft();
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        {
+            cout << "Angle: " << theCar.getAngle() << "\n";
+            cout << "x: " << theCar.getPosX() << "\n";
+            cout << "y: " << theCar.getPosY() << "\n";
+        }
+
         theCar.draw(&_window);
         _window.display();
     }
