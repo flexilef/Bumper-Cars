@@ -7,13 +7,13 @@ Car::Car()
     ///position
     posX = 0;
     posY = 0;
-    angle = 45;
+    angle = 0;
     velocity = 0;
-    acceleration = 1;
+    acceleration = 0;
 
     ///properties
-    maxSpeed = 3;
-    maxBackThrust = 50;
+    maxSpeed = 10;
+    maxBackThrust = 3;
     rotateSpeed = 5;
     maxHealth = 100;
     mass = 10;
@@ -22,7 +22,7 @@ Car::Car()
     currentState = 1;
 
     ///image properties
-    currentGraphic = "carSS.png";
+    currentGraphic = "greenCarSS.png";
 
     //for later
     rollGraphic = "greenCar.png";
@@ -34,13 +34,13 @@ Car::Car(int x, int y)
 {
     posX = x;
     posY = y;
-    angle = 45;
+    angle = 0;
     velocity = 0;
-    acceleration = 1;
+    acceleration = 0;
 
     ///properties
-    maxSpeed = 3;
-    maxBackThrust = 50;
+    maxSpeed = 10;
+    maxBackThrust = 3;
     rotateSpeed = 5;
     maxHealth = 100;
     mass = 10;
@@ -49,7 +49,7 @@ Car::Car(int x, int y)
     currentState = 1;
 
     ///image properties
-    currentGraphic = "carSS.png";
+    currentGraphic = "greenCarSS.png";
 
     //for later
     rollGraphic = "greenCar.png";
@@ -95,37 +95,65 @@ void Car::sync()
     currentSprite.setPosition(posX,posY);
 }
 
+//constantly driving
+void Car::drive()
+{
+    int friction = 1;
+
+    if(velocity > 0)
+    {
+        velocity-=friction;
+    }
+    else
+    {
+        velocity = 0;
+    }
+
+    double velocityX = cos(angle*PI/180.0)*velocity;
+    double velocityY = sin(angle*PI/180.0)*velocity;
+
+    std::cout << "velocityX: " << velocityX << "\n";
+    std::cout << "velocityY: " << velocityY << "\n";
+    posX+=velocityX;
+    posY-=velocityY;
+}
+
 void Car::accelerate()
 {
-    //if(acceleration < 3)
-    //    acceleration++;
+    if(acceleration < 3)
+        acceleration++;
 
-    //if(velocity < maxSpeed)
-    //    velocity+=acceleration;
+    //acceleration = 1;
 
-    velocity = 5;
+    if(velocity < maxSpeed)
+        velocity+=acceleration;
 
+    //velocity = 1;
+/*
     //slightly off but not visible enough to matter
     //the spritesheet is messed up... 0 was North so need to redo
     //spritesheet where 0 is Right and 90 is North
     //or else we will always have angle-90 to compensate
-    double velocityX = cos((angle-90)*PI/180.0f)*velocity;
-    double velocityY = sin((angle-90)*PI/180.0f)*velocity;
+    double velocityX = cos(angle*PI/180.0)*velocity;
+    double velocityY = sin(angle*PI/180.0)*velocity;
 
     std::cout << "velocityX: " << velocityX << "\n";
     std::cout << "velocityY: " << velocityY << "\n";
-    posX+=velocityX;//velocity*cos((angle-90)*PI/180);
-    posY+=velocityY;//velocity*sin((angle-90)*PI/180);
+    posX+=velocityX;
+    posY-=velocityY;
+    */
 }
 
 void Car::decelerate()
 {
-    acceleration--;
+    double velocityX = cos(angle*PI/180.0)*velocity;
+    double velocityY = sin(angle*PI/180.0)*velocity;
 
-    if(acceleration < 0)
-    {
-        acceleration = 0;
-    }
+    std::cout << "velocityX: " << velocityX << "\n";
+    std::cout << "velocityY: " << velocityY << "\n";
+
+    posX-=velocityX;
+    posY+=velocityY;
 }
 
 void Car::turnRight()
@@ -133,7 +161,7 @@ void Car::turnRight()
     if(angle > 359)
         angle = 0;
 
-    angle+=rotateSpeed;
+    angle-=rotateSpeed;
 }
 
 void Car::turnLeft()
@@ -141,7 +169,7 @@ void Car::turnLeft()
     if(angle < 0)
         angle = 359;
 
-    angle-=rotateSpeed;
+    angle+=rotateSpeed;
 }
 
 int Car::getPosX()

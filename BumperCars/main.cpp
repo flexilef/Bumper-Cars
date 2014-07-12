@@ -24,6 +24,7 @@ int main()
         }
         _window.clear();
 
+        theCar.drive();
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
                 sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
