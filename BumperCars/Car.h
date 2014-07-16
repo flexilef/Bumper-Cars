@@ -9,9 +9,10 @@ public:
     Car();
     Car(int, int);
 
-    int getPosX();
-    int getPosY();
+    double getPosX();
+    double getPosY();
     int getAngle();
+    double getVelocity();
     int getCurrentState();
 
     void setPosition(int, int);
@@ -37,13 +38,14 @@ private:
     double posX;
     double posY;
     int angle;
+    int rotateSpeed;
     double velocity;
     double acceleration;
 
     ///properties
-    double maxSpeed;
-    double maxBackThrust;
-    double rotateSpeed;
+    double maxVelocity;
+    double maxBackVelocity;
+    int maxRotateSpeed;
     int maxHealth;
     int mass;
 

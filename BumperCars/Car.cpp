@@ -7,14 +7,15 @@ Car::Car()
     ///position
     posX = 0;
     posY = 0;
-    angle = 0;
     velocity = 0;
     acceleration = 0;
+    angle = 0;
+    rotateSpeed = 5;
 
     ///properties
-    maxSpeed = 10;
-    maxBackThrust = 3;
-    rotateSpeed = 5;
+    maxVelocity = 10;
+    maxBackVelocity = 3;
+    maxRotateSpeed = 5;
     maxHealth = 100;
     mass = 10;
 
@@ -34,14 +35,15 @@ Car::Car(int x, int y)
 {
     posX = x;
     posY = y;
-    angle = 0;
     velocity = 0;
     acceleration = 0;
+    angle = 0;
+    rotateSpeed = 5;
 
     ///properties
-    maxSpeed = 10;
-    maxBackThrust = 3;
-    rotateSpeed = 5;
+    maxVelocity = 10;
+    maxBackVelocity = 5;
+    maxRotateSpeed = 5;
     maxHealth = 100;
     mass = 10;
 
@@ -98,62 +100,50 @@ void Car::sync()
 //constantly driving
 void Car::drive()
 {
-    int friction = 1;
+    double frictionFactor = .1;     //lower the less friction there is
+    double velocityLoss = velocity * frictionFactor;
 
-    if(velocity > 0)
-    {
-        velocity-=friction;
-    }
+    velocity-=velocityLoss;         //apply friction
+
+    //special cases are hardcoded
+    if(angle == 0)
+        posX+=velocity;
+    else if(angle == 90)
+        posY-=velocity;
+    else if(angle == 180)
+        posX-=velocity;
+    else if(angle == 270)
+        posY+=velocity;
     else
     {
-        velocity = 0;
+        double velocityX = cos(angle*PI/180.0)*velocity;
+        double velocityY = sin(angle*PI/180.0)*velocity;
+
+        //update position
+        posX+=velocityX;
+        posY-=velocityY;
     }
 
-    double velocityX = cos(angle*PI/180.0)*velocity;
-    double velocityY = sin(angle*PI/180.0)*velocity;
-
-    std::cout << "velocityX: " << velocityX << "\n";
-    std::cout << "velocityY: " << velocityY << "\n";
-    posX+=velocityX;
-    posY-=velocityY;
+    std::cout << "velocityLoss: " << velocityLoss << "\n";
+    std::cout << "velocity: " << velocity << "\n";
+    //std::cout << "velocityX: " << velocityX << "\n";
+    //std::cout << "velocityY: " << velocityY << "\n";
 }
 
 void Car::accelerate()
 {
-    if(acceleration < 3)
-        acceleration++;
+    acceleration = 2;
 
-    //acceleration = 1;
-
-    if(velocity < maxSpeed)
+    if(velocity < maxVelocity)
         velocity+=acceleration;
-
-    //velocity = 1;
-/*
-    //slightly off but not visible enough to matter
-    //the spritesheet is messed up... 0 was North so need to redo
-    //spritesheet where 0 is Right and 90 is North
-    //or else we will always have angle-90 to compensate
-    double velocityX = cos(angle*PI/180.0)*velocity;
-    double velocityY = sin(angle*PI/180.0)*velocity;
-
-    std::cout << "velocityX: " << velocityX << "\n";
-    std::cout << "velocityY: " << velocityY << "\n";
-    posX+=velocityX;
-    posY-=velocityY;
-    */
 }
 
 void Car::decelerate()
 {
-    double velocityX = cos(angle*PI/180.0)*velocity;
-    double velocityY = sin(angle*PI/180.0)*velocity;
+    acceleration = 1;
 
-    std::cout << "velocityX: " << velocityX << "\n";
-    std::cout << "velocityY: " << velocityY << "\n";
-
-    posX-=velocityX;
-    posY+=velocityY;
+    if(velocity > -1*maxBackVelocity)
+        velocity-=acceleration;
 }
 
 void Car::turnRight()
@@ -172,11 +162,11 @@ void Car::turnLeft()
     angle+=rotateSpeed;
 }
 
-int Car::getPosX()
+double Car::getPosX()
 {
     return posX;
 }
-int Car::getPosY()
+double Car::getPosY()
 {
     return posY;
 }
@@ -184,3 +174,9 @@ int Car::getAngle()
 {
     return angle;
 }
+
+double Car::getVelocity()
+{
+    return velocity;
+}
+
