@@ -14,11 +14,12 @@ public:
     int getAngle();
     double getVelocity();
     int getCurrentState();
+    sf::Sprite& getCurrentSprite();
 
-    void setPosition(int, int);
+    void setPosition(double, double);
     void setAngle(int);
-    void setVelocity(int);
-    void setAcceleration(int);
+    void setVelocity(double);
+    void setAcceleration(double);
 
     void setHealth(int);
 

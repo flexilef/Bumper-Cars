@@ -2,7 +2,7 @@
 
 #include "Game.h"
 
-Game::Game(int width, int height)
+Game::Game(int width, int height):car(400, 400)
 {
     window.create(sf::VideoMode(width, height), "Bumper Cars!!!");
 }
@@ -22,6 +22,8 @@ void Game::gameLoop()
         window.clear();
 
         theCar.drive();
+        car.drive();
+
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
                 sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
@@ -71,8 +73,24 @@ void Game::gameLoop()
             std::cout << "x: " << theCar.getPosX() << "\n";
             std::cout << "y: " << theCar.getPosY() << "\n";
         }
+        checkCollisions();
 
         theCar.draw(&window);
+        car.draw(&window);
+
         window.display();
     }
+}
+
+void Game::checkCollisions()
+{
+    if(Collision::BoundingBoxTest(theCar.getCurrentSprite(), car.getCurrentSprite()))
+    {
+        std::cout << "Collided!\n";
+        double velocity = theCar.getVelocity()/2;
+        theCar.setVelocity(-20);
+        car.setVelocity(velocity);
+    }
+    else
+        std::cout << "NOT Collided!\n";
 }

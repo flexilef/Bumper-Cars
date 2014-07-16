@@ -100,7 +100,7 @@ void Car::sync()
 //constantly driving
 void Car::drive()
 {
-    double frictionFactor = .1;     //lower the less friction there is
+    double frictionFactor = .25;     //lower the less friction there is
     double velocityLoss = velocity * frictionFactor;
 
     velocity-=velocityLoss;         //apply friction
@@ -124,8 +124,8 @@ void Car::drive()
         posY-=velocityY;
     }
 
-    std::cout << "velocityLoss: " << velocityLoss << "\n";
-    std::cout << "velocity: " << velocity << "\n";
+    //std::cout << "velocityLoss: " << velocityLoss << "\n";
+    //std::cout << "velocity: " << velocity << "\n";
     //std::cout << "velocityX: " << velocityX << "\n";
     //std::cout << "velocityY: " << velocityY << "\n";
 }
@@ -178,5 +178,15 @@ int Car::getAngle()
 double Car::getVelocity()
 {
     return velocity;
+}
+
+void Car::setVelocity(double v)
+{
+    velocity = v;
+}
+
+sf::Sprite& Car::getCurrentSprite()
+{
+    return currentSprite;
 }
 
