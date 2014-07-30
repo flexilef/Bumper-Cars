@@ -10,11 +10,11 @@ Car::Car()
     velocity = 0;
     acceleration = 0;
     angle = 0;
-    rotateSpeed = 5;
+    rotateSpeed = 2;
 
     ///properties
-    maxVelocity = 10;
-    maxBackVelocity = 3;
+    maxVelocity = 20;
+    maxBackVelocity = 20;
     maxRotateSpeed = 5;
     maxHealth = 100;
     mass = 10;
@@ -38,11 +38,11 @@ Car::Car(int x, int y)
     velocity = 0;
     acceleration = 0;
     angle = 0;
-    rotateSpeed = 5;
+    rotateSpeed = 2;
 
     ///properties
-    maxVelocity = 10;
-    maxBackVelocity = 5;
+    maxVelocity = 20;
+    maxBackVelocity = 20;
     maxRotateSpeed = 5;
     maxHealth = 100;
     mass = 10;
@@ -97,13 +97,34 @@ void Car::sync()
     currentSprite.setPosition(posX,posY);
 }
 
+//calculates the forces and shit
+void Car::update()
+{
+    forceTraction = 0;
+    forceDrag = -drag * velocity * velocity;
+    forceRollingResistance = -rollingResistance * velocity;
+
+    forceLongitudinal = forceTraction + forceDrag + forceRollingResistance;
+
+    acceleration = forceLongitudinal/mass;
+    velocity+=acceleration;
+}
+
 //constantly driving
 void Car::drive()
 {
-    double frictionFactor = .25;     //lower the less friction there is
-    double velocityLoss = velocity * frictionFactor;
+    if(driveState == 1)     //accelerating
+        forceTraction = engineForce;
+    else if(driveState == 0)    //not accelerating
+        forceTraction = 0;
 
-    velocity-=velocityLoss;         //apply friction
+    forceDrag = -drag * velocity * velocity;
+    forceRollingResistance = -rollingResistance * velocity;
+
+    forceLongitudinal = forceTraction + forceDrag + forceRollingResistance;
+
+    acceleration = forceLongitudinal/mass;
+    velocity+=acceleration;
 
     //special cases are hardcoded
     if(angle == 0)
@@ -124,26 +145,21 @@ void Car::drive()
         posY-=velocityY;
     }
 
-    //std::cout << "velocityLoss: " << velocityLoss << "\n";
-    //std::cout << "velocity: " << velocity << "\n";
-    //std::cout << "velocityX: " << velocityX << "\n";
-    //std::cout << "velocityY: " << velocityY << "\n";
+    //std::cout << "longitudinal: " << forceLongitudinal << "\n";
+    //std::cout << "drag: " << forceDrag << "\n";
+    //std::cout << "rollr: " << forceRollingResistance << "\n";
+    //std::cout << "tract: " << forceTraction << "\n";
+    //std::cout << "velocityY: " << posY << "\n";
 }
 
 void Car::accelerate()
 {
-    acceleration = 2;
-
-    if(velocity < maxVelocity)
-        velocity+=acceleration;
+    driveState = 1;
 }
 
 void Car::decelerate()
 {
-    acceleration = 1;
-
-    if(velocity > -1*maxBackVelocity)
-        velocity-=acceleration;
+    driveState = 0;
 }
 
 void Car::turnRight()
@@ -180,9 +196,19 @@ double Car::getVelocity()
     return velocity;
 }
 
+double Car::getAcceleration()
+{
+    return acceleration;
+}
+
 void Car::setVelocity(double v)
 {
     velocity = v;
+}
+
+int Car::getDriveState()
+{
+    return driveState;
 }
 
 sf::Sprite& Car::getCurrentSprite()

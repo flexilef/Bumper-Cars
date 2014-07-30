@@ -13,28 +13,34 @@ public:
     double getPosY();
     int getAngle();
     double getVelocity();
+    double getAcceleration();
     int getCurrentState();
+    int getDriveState();
+
+    //
     sf::Sprite& getCurrentSprite();
 
     void setPosition(double, double);
     void setAngle(int);
     void setVelocity(double);
     void setAcceleration(double);
-
     void setHealth(int);
+    void setDriveState(int);
 
     ///actions
+    void update();
     void drive();
     void accelerate();
+    void decelerate();
     void turnRight();
     void turnLeft();
-    void decelerate();
     int draw(sf::RenderWindow*);
     void sync();
 
 private:
 
     const int PI = 3.14159265359;
+
     ///positional
     double posX;
     double posY;
@@ -48,11 +54,23 @@ private:
     double maxBackVelocity;
     int maxRotateSpeed;
     int maxHealth;
-    int mass;
 
     ///car state
     int health;
     int currentState;   //standing still, rolling, dead... etc
+    int driveState;
+
+    ///Driving forces and stuff
+    double forceTraction;
+    double forceDrag;
+    double forceRollingResistance;
+    double forceLongitudinal;
+
+    double engineForce = 10;
+    const double rollingResistance = 1;
+    const double drag = .5;
+    int mass;
+    bool accelerating;
 
     ///image properties
     std::string currentGraphic;
