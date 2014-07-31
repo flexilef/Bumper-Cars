@@ -5,11 +5,11 @@
 Car::Car()
 {
     ///position
-    posX = 0;
-    posY = 0;
+    posX = 200;
+    posY = 200;
     velocity = 0;
     acceleration = 0;
-    angle = 0;
+    angle = 45;
     rotateSpeed = 2;
 
     ///properties
@@ -161,9 +161,6 @@ void Car::drive()
 {
     calcAcceleration();
 
-    //TODO: fix break when going backwards, forwards works
-    //      fix angle turning and sprite
-
     //special conditions must be handled here
     //need to limit the velocity when reversing (not auto like forward)
     if(driveState == 2 && velocity < maxBackVelocity)
@@ -186,7 +183,7 @@ void Car::drive()
         velocity+=acceleration;
     }
 
-//special cases due to angle round off errors are hardcoded instead
+//special cases due to angle round off errors are hard-coded instead
     if(angle == 0)
         posX+=velocity;
     else if(angle == 90)
@@ -197,21 +194,20 @@ void Car::drive()
         posY+=velocity;
     else
     {
-        //double velocityX = cos(angle*PI/180.0)*velocity;
-        //double velocityY = sin(angle*PI/180.0)*velocity;
-
         //update position
         posX+=cos(angle*PI/180.0)*velocity;
         posY-=sin(angle*PI/180.0)*velocity;
     }
 
-    std::cout << "longitudinal: " << forceLongitudinal << "\n";
-    std::cout << "drag: " << forceDrag << "\n";
-    std::cout << "rollr: " << forceRollingResistance << "\n";
-    std::cout << "tract: " << forceTraction << "\n";
-    std::cout << "velocity: " << velocity << "\n";
-    std::cout << "acceleration: " << acceleration << "\n";
-    std::cout << "driveState: " << driveState << "\n";
+    //std::cout << "angle: " << angle << "\n";
+    //std::cout << "AngularV: " << rotateSpeed << "\n";
+    //std::cout << "longitudinal: " << forceLongitudinal << "\n";
+    //std::cout << "drag: " << forceDrag << "\n";
+    //std::cout << "rollr: " << forceRollingResistance << "\n";
+    //std::cout << "tract: " << forceTraction << "\n";
+    //std::cout << "velocity: " << velocity << "\n";
+    //std::cout << "acceleration: " << acceleration << "\n";
+    //std::cout << "driveState: " << driveState << "\n";
 }
 
 void Car::setDriveState(int state)
@@ -228,6 +224,9 @@ void Car::turnRight()
     if(angle > 359)
         angle = 0;
 
+    //just felt right. Nothing to do with physics
+    rotateSpeed = velocity*.333;
+
     angle-=rotateSpeed;
 }
 
@@ -235,6 +234,9 @@ void Car::turnLeft()
 {
     if(angle < 0)
         angle = 359;
+
+    //just felt right. Nothing to do with physics
+    rotateSpeed = velocity*.333;
 
     angle+=rotateSpeed;
 }

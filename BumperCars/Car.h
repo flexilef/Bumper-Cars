@@ -43,7 +43,7 @@ private:
     double posX;
     double posY;
     int angle;
-    int rotateSpeed;
+    double rotateSpeed;
     double velocity;
     double acceleration;
 
