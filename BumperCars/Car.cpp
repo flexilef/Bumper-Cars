@@ -16,7 +16,7 @@ Car::Car()
     maxBackVelocity = -5;
     maxRotateSpeed = 5;
     maxHealth = 100;
-    mass = 500;
+    mass = 1500;
 
     health = maxHealth;
     currentState = 1;
@@ -95,10 +95,11 @@ void Car::sync()
     currentSprite.setPosition(posX,posY);
 }
 
-//calculates the forces and shit
+//calculates the acceleration based on forces and the current driveState
 void Car::calcAcceleration()
 {
-    if(driveState == 0)             //not accelerating
+    //not accelerating
+    if(driveState == 0)
     {
         forceTraction = 0;
 
@@ -107,7 +108,8 @@ void Car::calcAcceleration()
         forceRollingResistance = -ROLL_RESISTANCE * velocity;
         forceLongitudinal = forceTraction + forceDrag + forceRollingResistance;
     }
-    else if(driveState == 1)         //accelerating
+    //accelerating
+    else if(driveState == 1)
     {
         forceTraction = ENGINE_FORCE;
 
@@ -116,7 +118,8 @@ void Car::calcAcceleration()
         forceRollingResistance = -ROLL_RESISTANCE * velocity;
         forceLongitudinal = forceTraction + forceDrag + forceRollingResistance;
     }
-    else if(driveState == 2)    //reverse
+    //reversing
+    else if(driveState == 2)
     {
         forceTraction = -ENGINE_FORCE;
 
@@ -125,14 +128,29 @@ void Car::calcAcceleration()
         forceRollingResistance = -ROLL_RESISTANCE * velocity;
         forceLongitudinal = forceTraction + forceDrag + forceRollingResistance;
     }
-    else if(driveState == 3)    //break
+    //breaking
+    else if(driveState == 3)
     {
-        forceBreak = -BREAK;
+        //going forwards
+        if(velocity > 0)
+        {
+            forceBreak = -BREAK;
 
-        //calculating the forces
-        forceDrag = -DRAG * velocity * velocity;
-        forceRollingResistance = -ROLL_RESISTANCE * velocity;
-        forceLongitudinal = forceBreak + forceDrag + forceRollingResistance;
+            //calculating the forces
+            forceDrag = -DRAG * velocity * velocity;
+            forceRollingResistance = -ROLL_RESISTANCE * velocity;
+            forceLongitudinal = forceBreak + forceDrag + forceRollingResistance;
+        }
+        //going reverse
+        else
+        {
+            forceBreak = BREAK;
+
+            //calculating the forces
+            forceDrag = -DRAG * velocity * velocity;
+            forceRollingResistance = -ROLL_RESISTANCE * velocity;
+            forceLongitudinal = forceBreak + forceDrag + forceRollingResistance;
+        }
     }
 
     acceleration = forceLongitudinal/mass;
@@ -145,20 +163,30 @@ void Car::drive()
 
     //TODO: fix break when going backwards, forwards works
     //      fix angle turning and sprite
+
+    //special conditions must be handled here
+    //need to limit the velocity when reversing (not auto like forward)
     if(driveState == 2 && velocity < maxBackVelocity)
     {
         velocity = maxBackVelocity;
     }
-    else if(driveState == 3 && velocity < 0)
+    //breaking
+    else if(driveState == 3)
     {
-        velocity = 0;
+        if(velocity > -.1 && velocity < .1)
+        {
+            velocity = 0;
+        }
+        else
+            velocity+=acceleration;
     }
+    //no other special case? then deal with velocity normally
     else
     {
         velocity+=acceleration;
     }
 
-    //special cases are hardcoded
+//special cases due to angle round off errors are hardcoded instead
     if(angle == 0)
         posX+=velocity;
     else if(angle == 90)
@@ -169,12 +197,12 @@ void Car::drive()
         posY+=velocity;
     else
     {
-        double velocityX = cos(angle*PI/180.0)*velocity;
-        double velocityY = sin(angle*PI/180.0)*velocity;
+        //double velocityX = cos(angle*PI/180.0)*velocity;
+        //double velocityY = sin(angle*PI/180.0)*velocity;
 
         //update position
-        posX+=velocityX;
-        posY-=velocityY;
+        posX+=cos(angle*PI/180.0)*velocity;
+        posY-=sin(angle*PI/180.0)*velocity;
     }
 
     std::cout << "longitudinal: " << forceLongitudinal << "\n";

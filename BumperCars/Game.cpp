@@ -50,7 +50,7 @@ void Game::gameLoop()
                 else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
                     theCar.turnLeft();
             }
-            else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            else if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
             {
                 theCar.setDriveState(3);
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))

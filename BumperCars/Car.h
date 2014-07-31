@@ -64,10 +64,10 @@ private:
     double forceBreak;
     double forceLongitudinal;
 
-    const double ENGINE_FORCE = 75;
-    const double BREAK = 50;
-    const double ROLL_RESISTANCE = 10;
-    const double DRAG = .5;
+    const double ENGINE_FORCE = 150;
+    const double BREAK = 80;
+    const double ROLL_RESISTANCE = 12.8;
+    const double DRAG = 0.4257;
     int mass;
 
     ///image properties
