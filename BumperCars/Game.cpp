@@ -36,7 +36,23 @@ void Game::gameLoop()
             ///This should all be in updateGame()
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             {
-                theCar.accelerate();
+                theCar.setDriveState(1);
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+                    theCar.turnRight();
+                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+                    theCar.turnLeft();
+            }
+            else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            {
+                theCar.setDriveState(2);
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+                    theCar.turnRight();
+                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+                    theCar.turnLeft();
+            }
+            else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                theCar.setDriveState(3);
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
                     theCar.turnRight();
                 else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -44,17 +60,8 @@ void Game::gameLoop()
             }
             else
             {
-                theCar.decelerate();
+                theCar.setDriveState(0);
             }
-            /*
-            else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            {
-                theCar.accelerate();
-            }
-            else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            {
-                theCar.decelerate();
-            }*/
 
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             {
@@ -65,15 +72,6 @@ void Game::gameLoop()
             {
                 if(theCar.getVelocity() > 1)
                     theCar.turnLeft();
-            }
-            //debugging purposes
-            else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-            {
-                std::cout << "Angle: " << theCar.getAngle() << "\n";
-                std::cout << "x: " << theCar.getPosX() << "\n";
-                std::cout << "y: " << theCar.getPosY() << "\n";
-                std::cout << "velocity: " << theCar.getVelocity() << "\n";
-                std::cout << "acceleration: " << theCar.getAcceleration() << "\n";
             }
             theCar.drive();
             //car.drive();

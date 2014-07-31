@@ -16,6 +16,7 @@ public:
     double getAcceleration();
     int getCurrentState();
     int getDriveState();
+    void calcAcceleration();
 
     //
     sf::Sprite& getCurrentSprite();
@@ -28,10 +29,7 @@ public:
     void setDriveState(int);
 
     ///actions
-    void update();
     void drive();
-    void accelerate();
-    void decelerate();
     void turnRight();
     void turnLeft();
     int draw(sf::RenderWindow*);
@@ -50,7 +48,6 @@ private:
     double acceleration;
 
     ///properties
-    double maxVelocity;
     double maxBackVelocity;
     int maxRotateSpeed;
     int maxHealth;
@@ -64,13 +61,14 @@ private:
     double forceTraction;
     double forceDrag;
     double forceRollingResistance;
+    double forceBreak;
     double forceLongitudinal;
 
-    double engineForce = 10;
-    const double rollingResistance = 1;
-    const double drag = .5;
+    const double ENGINE_FORCE = 75;
+    const double BREAK = 50;
+    const double ROLL_RESISTANCE = 10;
+    const double DRAG = .5;
     int mass;
-    bool accelerating;
 
     ///image properties
     std::string currentGraphic;
