@@ -3,7 +3,7 @@
 
 #include "Game.h"
 
-Game::Game(int width, int height):car(400, 400)
+Game::Game(int width, int height) : theRenderer(&window), theCar(400, 400)
 {
     window.create(sf::VideoMode(width, height), "Bumper Cars!!!");
 }
@@ -33,72 +33,81 @@ void Game::gameLoop()
 
         while(myClock.getElapsedTime().asMilliseconds() > nextGameTick && loops < MAX_FRAMESKIP)
         {
-            ///This should all be in updateGame()
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            {
-                theCar.setDriveState(1);
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-                    theCar.turnRight();
-                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-                    theCar.turnLeft();
-            }
-            else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            {
-                theCar.setDriveState(2);
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-                    theCar.turnRight();
-                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-                    theCar.turnLeft();
-            }
-            else if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
-            {
-                theCar.setDriveState(3);
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-                    theCar.turnRight();
-                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-                    theCar.turnLeft();
-            }
-            else
-            {
-                theCar.setDriveState(0);
-            }
-
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            {
-                if(theCar.getVelocity() > 1)
-                    theCar.turnRight();
-            }
-            else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            {
-                if(theCar.getVelocity() > 1)
-                    theCar.turnLeft();
-            }
-            theCar.drive();
-            //car.drive();
-            checkCollisions();
-            ///This above should all be in updateGame()
+            handleUserInput();
+            update();
+            //checkCollisions();
 
             //time stuff
             nextGameTick+=SKIP_TICKS;
             loops++;
-
-            //std::cout << "loops: " << loops << "\n";
-            //std::cout << "nextGameTick: " << nextGameTick << "\n";
-            //std::cout << "elapsed: " << myClock.getElapsedTime().asMilliseconds() << "\n";
-
         }
 
         window.clear();
-        ///This should all be in displayGame()
-        theCar.draw(&window);
-        car.draw(&window);
-
+        displayGame();
         window.display();
-        ///This all above should be in displayGame()
     }
 }
 
-void Game::checkCollisions()
+void Game::update()
+{
+    theCar.drive();
+}
+
+void Game::displayGame()
+{
+    theRenderer.render(theCar);
+}
+
+void Game::handleUserInput()
+{
+    //UP = accelerate
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    {
+        theCar.setDriveState(1);
+        //allow turning only when accelerating
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            theCar.turnRight();
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            theCar.turnLeft();
+    }
+    //reversing
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    {
+        theCar.setDriveState(2);
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            theCar.turnRight();
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            theCar.turnLeft();
+    }
+    //braking
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+    {
+        theCar.setDriveState(3);
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            theCar.turnRight();
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            theCar.turnLeft();
+    }
+    //no engine force
+    else
+    {
+        theCar.setDriveState(0);
+
+        //still turn if the user wants to
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            if(theCar.getVelocity() > 1)
+                theCar.turnRight();
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            if(theCar.getVelocity() > 1)
+                theCar.turnLeft();
+        }
+    }
+}
+
+/*void Game::checkCollisions()
 {
     if(Collision::BoundingBoxTest(theCar.getCurrentSprite(), car.getCurrentSprite()))
     {
@@ -109,4 +118,4 @@ void Game::checkCollisions()
     }
     //else
     //std::cout << "NOT Collided!\n";
-}
+}*/

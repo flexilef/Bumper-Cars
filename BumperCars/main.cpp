@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    Game theGame(500, 500);
+    Game theGame(600, 600);
     theGame.gameLoop();
 
     return 0;

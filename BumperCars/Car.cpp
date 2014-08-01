@@ -4,12 +4,8 @@
 
 Car::Car()
 {
-    ///position
-    posX = 200;
-    posY = 200;
     velocity = 0;
     acceleration = 0;
-    angle = 45;
     rotateSpeed = 2;
 
     ///properties
@@ -19,24 +15,28 @@ Car::Car()
     mass = 1500;
 
     health = maxHealth;
-    currentState = 1;
 
-    ///image properties
+    ///Renderable properties
+    posX = 200;
+    posY = 200;
+    angle = 45;
     currentGraphic = "greenCarSS.png";
-
-    //for later
-    rollGraphic = "greenCar.png";
-    staticGraphic = "greenCar.png";
-    destroyedGraphic = "greenCar.png";
+    anglePerRow = 40;
+    anglePerSprite = 5;
+    spriteHeight = 76;
+    spriteWidth = 76;
+    row = angle/anglePerRow;
+    column = (angle-(anglePerRow*row)) / anglePerSprite;
 }
 
 Car::Car(int x, int y)
 {
     posX = x;
     posY = y;
+    angle = 0;
+
     velocity = 0;
     acceleration = 0;
-    angle = 0;
     rotateSpeed = 2;
 
     ///properties
@@ -46,17 +46,21 @@ Car::Car(int x, int y)
     mass = 1500;
 
     health = maxHealth;
-    currentState = 1;
 
-    ///image properties
+    ///Renderable properties
+    posX = 200;
+    posY = 200;
+    angle = 45;
     currentGraphic = "greenCarSS.png";
-
-    //for later
-    rollGraphic = "greenCar.png";
-    staticGraphic = "greenCar.png";
-    destroyedGraphic = "greenCar.png";
+    anglePerRow = 40;
+    anglePerSprite = 5;
+    spriteHeight = 76;
+    spriteWidth = 76;
+    row = angle/anglePerRow;
+    column = (angle-(anglePerRow*row)) / anglePerSprite;
 }
 
+/*
 int Car::draw(sf::RenderWindow* _window)
 {
     sf::Texture carText;
@@ -74,7 +78,7 @@ int Car::draw(sf::RenderWindow* _window)
     int row = angle/40;
     int column = (angle-(40*row)) / 5;
 
-    currentSprite.setTexture(carText);
+    //currentSprite.setTexture(carText);
 
     //std::cout << "row: " << row << " column: " << column << "\n";
 
@@ -88,6 +92,7 @@ int Car::draw(sf::RenderWindow* _window)
 
     return 0;
 }
+*/
 
 //syncs the sprite graphic with the actual object
 void Car::sync()
@@ -225,7 +230,7 @@ void Car::turnRight()
         angle = 0;
 
     //just felt right. Nothing to do with physics
-    rotateSpeed = velocity*.333;
+    rotateSpeed = .5*velocity;
 
     angle-=rotateSpeed;
 }
@@ -236,22 +241,9 @@ void Car::turnLeft()
         angle = 359;
 
     //just felt right. Nothing to do with physics
-    rotateSpeed = velocity*.333;
+    rotateSpeed = .5*velocity;
 
     angle+=rotateSpeed;
-}
-
-double Car::getPosX()
-{
-    return posX;
-}
-double Car::getPosY()
-{
-    return posY;
-}
-int Car::getAngle()
-{
-    return angle;
 }
 
 double Car::getVelocity()
@@ -273,9 +265,3 @@ int Car::getDriveState()
 {
     return driveState;
 }
-
-sf::Sprite& Car::getCurrentSprite()
-{
-    return currentSprite;
-}
-

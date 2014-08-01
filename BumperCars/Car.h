@@ -2,27 +2,19 @@
 #define CAR_H_INCLUDED
 
 #include <SFML/Graphics.hpp>
+#include "Renderable.h"
 
-class Car
+class Car : public Renderable
 {
 public:
     Car();
     Car(int, int);
 
-    double getPosX();
-    double getPosY();
-    int getAngle();
     double getVelocity();
     double getAcceleration();
-    int getCurrentState();
     int getDriveState();
     void calcAcceleration();
 
-    //
-    sf::Sprite& getCurrentSprite();
-
-    void setPosition(double, double);
-    void setAngle(int);
     void setVelocity(double);
     void setAcceleration(double);
     void setHealth(int);
@@ -39,10 +31,6 @@ private:
 
     const int PI = 3.14159265359;
 
-    ///positional
-    double posX;
-    double posY;
-    int angle;
     double rotateSpeed;
     double velocity;
     double acceleration;
@@ -54,7 +42,6 @@ private:
 
     ///car state
     int health;
-    int currentState;   //standing still, rolling, dead... etc
     int driveState;
 
     ///Driving forces and stuff
@@ -71,12 +58,9 @@ private:
     int mass;
 
     ///image properties
-    std::string currentGraphic;
     std::string rollGraphic;
     std::string staticGraphic;
     std::string destroyedGraphic;
-
-    sf::Sprite currentSprite;
 
     ///sound properties
     //TODO
