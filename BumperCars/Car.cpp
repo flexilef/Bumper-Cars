@@ -94,12 +94,6 @@ int Car::draw(sf::RenderWindow* _window)
 }
 */
 
-//syncs the sprite graphic with the actual object
-void Car::sync()
-{
-    currentSprite.setPosition(posX,posY);
-}
-
 //calculates the acceleration based on forces and the current driveState
 void Car::calcAcceleration()
 {

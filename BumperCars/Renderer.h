@@ -11,7 +11,6 @@ public:
     void loadAssets();
     void render(Renderable&);
     int loadImage(const std::string&);
-    void loadObject(Renderable&);
     bool alreadyLoaded(Renderable&);
 
 private:

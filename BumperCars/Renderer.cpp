@@ -42,24 +42,23 @@ int Renderer::loadImage(const std::string& filename)
     return 0;
 }
 
-void Renderer::loadObject(Renderable& obj)
-{
-    std::string filename = obj.getCurrentGraphic();
-
-    if(loadImage(filename) < 0)
-        obj.getCurrentSprite().setTexture(imageToTexture[filename]);
-}
-
 void Renderer::render(Renderable& obj)
 {
     std::string filename = obj.getCurrentGraphic();
     double posX = obj.getPosX();
     double posY = obj.getPosY();
+
+    //sets the row and column of sprite sheet AND sets the sprite to the obj's position
+    obj.sync();
+
     int row = obj.getRow();
     int column = obj.getColumn();
     double angle = obj.getAngle();
     int spriteWidth = obj.getSpriteWidth();
     int spriteHeight = obj.getSpriteHeight();
+
+    std::cout << "row: " << row << "\n";
+    std::cout << "column: " << column << "\n";
 
     if(!alreadyLoaded(obj))
         loadImage(filename);
@@ -72,9 +71,7 @@ void Renderer::render(Renderable& obj)
     obj.getCurrentSprite().setTexture(imageToTexture[filename]);
     obj.getCurrentSprite().setTextureRect(sf::IntRect(column*spriteWidth, row*spriteHeight, spriteWidth,spriteHeight));
 
-    //sync sprite and object
-    obj.getCurrentSprite().setPosition(posX,posY);
-
+    //draw it
     windowPtr->draw(obj.getCurrentSprite());
 }
 

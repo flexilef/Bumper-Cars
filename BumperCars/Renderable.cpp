@@ -2,7 +2,6 @@
 
 Renderable::Renderable()
 {
-
 }
 
 std::string Renderable::getCurrentGraphic()
@@ -52,4 +51,11 @@ void Renderable::setPosition(double x, double y)
 void Renderable::setAngle(double theta)
 {
     angle = theta;
+}
+
+void Renderable::sync()
+{
+    row = angle/anglePerRow;
+    column = (angle-(anglePerRow*row)) / anglePerSprite;
+    currentSprite.setPosition(posX,posY);
 }

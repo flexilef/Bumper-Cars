@@ -20,6 +20,7 @@ public:
     int getColumn();
     int getSpriteWidth();
     int getSpriteHeight();
+    void sync();
 
     //graphic info
     std::string getCurrentGraphic();

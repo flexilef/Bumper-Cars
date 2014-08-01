@@ -56,6 +56,7 @@ void Game::update()
 void Game::displayGame()
 {
     theRenderer.render(theCar);
+    std::cout << "angle: " << theCar.getAngle() << "\n";
 }
 
 void Game::handleUserInput()
