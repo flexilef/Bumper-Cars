@@ -4,12 +4,15 @@
 
 Car::Car()
 {
+    collided = false;
     velocity = 0;
+    velocityX = 0;
+    velocityY = 0;
     acceleration = 0;
     rotateSpeed = 2;
 
     ///properties
-    maxBackVelocity = -5;
+    maxBackVelocity = -10;
     maxRotateSpeed = 5;
     maxHealth = 100;
     mass = 1500;
@@ -19,6 +22,7 @@ Car::Car()
     ///Renderable properties
     posX = 200;
     posY = 200;
+    angleTravel = 45;
     angle = 45;
     currentGraphic = "greenCarSS.png";
     anglePerRow = 40;
@@ -31,16 +35,14 @@ Car::Car()
 
 Car::Car(int x, int y)
 {
-    posX = x;
-    posY = y;
-    angle = 0;
-
     velocity = 0;
+    velocityX = 0;
+    velocityY = 0;
     acceleration = 0;
     rotateSpeed = 2;
 
     ///properties
-    maxBackVelocity = -5;
+    maxBackVelocity = -10;
     maxRotateSpeed = 5;
     maxHealth = 100;
     mass = 1500;
@@ -48,9 +50,10 @@ Car::Car(int x, int y)
     health = maxHealth;
 
     ///Renderable properties
-    posX = 200;
-    posY = 200;
-    angle = 45;
+    posX = x;
+    posY = y;
+    angleTravel = 45;
+    angle = 60;
     currentGraphic = "greenCarSS.png";
     anglePerRow = 40;
     anglePerSprite = 5;
@@ -162,7 +165,7 @@ void Car::drive()
 
     //special conditions must be handled here
     //need to limit the velocity when reversing (not auto like forward)
-    if(driveState == 2 && velocity < maxBackVelocity)
+    if(driveState == 2  && velocity < maxBackVelocity)//&& //(acceleration > -.1 && acceleration < 0) )
     {
         velocity = maxBackVelocity;
     }
@@ -175,37 +178,49 @@ void Car::drive()
         }
         else
             velocity+=acceleration;
+
+        posX+=cos(angle*PI/180.0)*velocity;
+        posY-=sin(angle*PI/180.0)*velocity;
     }
     //no other special case? then deal with velocity normally
     else
     {
+        angleTravel = angle;
+
+        std::cout << "DriveState: " << driveState << "\n";
         velocity+=acceleration;
-    }
+        //}
 
-//special cases due to angle round off errors are hard-coded instead
-    if(angle == 0)
-        posX+=velocity;
-    else if(angle == 90)
-        posY-=velocity;
-    else if(angle == 180)
-        posX-=velocity;
-    else if(angle == 270)
-        posY+=velocity;
-    else
-    {
+        //special cases due to angle round off errors are hard-coded instead
+        /*if(angle == 0)
+            posX+=velocity;
+        else if(angle == 90)
+            posY-=velocity;
+        else if(angle == 180)
+            posX-=velocity;
+        else if(angle == 270)
+            posY+=velocity;
+        else
+        {*/
+        velocityX = cos(angle*PI/180.0)*velocity;
+        velocityY = sin(angle*PI/180.0)*velocity;
         //update position
-        posX+=cos(angle*PI/180.0)*velocity;
-        posY-=sin(angle*PI/180.0)*velocity;
+        posX+=velocityX;
+        posY-=velocityY;
+        //}
     }
 
-    //std::cout << "angle: " << angle << "\n";
+    std::cout << "angle: " << angle << "\n";
+    std::cout << "x: " << posX << "\n";
+    std::cout << "y: " << posY << "\n";
+    //std::cout << "angleTravel: " << angleTravel << "\n";
     //std::cout << "AngularV: " << rotateSpeed << "\n";
     //std::cout << "longitudinal: " << forceLongitudinal << "\n";
     //std::cout << "drag: " << forceDrag << "\n";
     //std::cout << "rollr: " << forceRollingResistance << "\n";
     //std::cout << "tract: " << forceTraction << "\n";
-    //std::cout << "velocity: " << velocity << "\n";
-    //std::cout << "acceleration: " << acceleration << "\n";
+    std::cout << "velocity: " << velocity << "\n";
+    std::cout << "acceleration: " << acceleration << "\n";
     //std::cout << "driveState: " << driveState << "\n";
 }
 
@@ -215,6 +230,7 @@ void Car::setDriveState(int state)
     //1 = accelerating
     //2 = reverse
     //3 = break
+    //4 = crash
     driveState = state;
 }
 
@@ -227,6 +243,7 @@ void Car::turnRight()
     rotateSpeed = .5*velocity;
 
     angle-=rotateSpeed;
+    angleTravel = angle;
 }
 
 void Car::turnLeft()
@@ -238,6 +255,7 @@ void Car::turnLeft()
     rotateSpeed = .5*velocity;
 
     angle+=rotateSpeed;
+    angleTravel = angle;
 }
 
 double Car::getVelocity()
@@ -250,9 +268,20 @@ double Car::getAcceleration()
     return acceleration;
 }
 
+void Car::setAngleTravel(double theta)
+{
+    angleTravel = theta;
+}
+
 void Car::setVelocity(double v)
 {
     velocity = v;
+}
+
+void Car::setVelocity(double vx, double vy)
+{
+    velocityX = vx;
+    velocityY = vy;
 }
 
 int Car::getDriveState()

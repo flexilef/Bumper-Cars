@@ -3,8 +3,10 @@
 
 #include "Game.h"
 
-Game::Game(int width, int height) : theRenderer(&window), theCar(400, 400)
+Game::Game(int w, int h) : theRenderer(&window), theCar(200, 200)
 {
+    width = w;
+    height = h;
     window.create(sf::VideoMode(width, height), "Bumper Cars!!!");
 }
 
@@ -35,7 +37,7 @@ void Game::gameLoop()
         {
             handleUserInput();
             update();
-            //checkCollisions();
+            checkCollisions();
 
             //time stuff
             nextGameTick+=SKIP_TICKS;
@@ -56,7 +58,7 @@ void Game::update()
 void Game::displayGame()
 {
     theRenderer.render(theCar);
-    std::cout << "angle: " << theCar.getAngle() << "\n";
+    //std::cout << "angle: " << theCar.getAngle() << "\n";
 }
 
 void Game::handleUserInput()
@@ -108,8 +110,52 @@ void Game::handleUserInput()
     }
 }
 
-/*void Game::checkCollisions()
+void Game::checkCollisions()
 {
+    //RIGHT wall
+    if(theCar.getPosX() > width)
+    {
+        int angle = theCar.getAngle();
+
+        if((angle > 0 && angle < 90) || (angle > 270 && angle < 360))
+            theCar.setVelocity(-.1);
+        else
+            theCar.setVelocity(.1);
+    }
+    //LEFT wall
+    else if(theCar.getPosX() < 0)
+    {
+        int angle = theCar.getAngle();
+
+        if(angle > 90 && angle < 270)
+            theCar.setVelocity(-.1);
+        else
+            theCar.setVelocity(.1);
+    }
+    //BOTTOM wall
+    else if(theCar.getPosY() > height)
+    {
+        int angle = theCar.getAngle();
+
+        if(angle > 180 && angle < 360)
+            theCar.setVelocity(-.1);
+        else
+            theCar.setVelocity(.1);
+    }
+    //NORTH wall
+    else if(theCar.getPosY() < 0)
+    {
+        int angle = theCar.getAngle();
+
+        if(angle > 0 && angle < 180)
+            theCar.setVelocity(-.1);
+        else
+            theCar.setVelocity(.1);
+    }
+
+    //std::cout << "DriveState: " << theCar.getDriveState() << "\n";
+
+    /*
     if(Collision::BoundingBoxTest(theCar.getCurrentSprite(), car.getCurrentSprite()))
     {
         //std::cout << "Collided!\n";
@@ -119,4 +165,5 @@ void Game::handleUserInput()
     }
     //else
     //std::cout << "NOT Collided!\n";
-}*/
+    */
+}

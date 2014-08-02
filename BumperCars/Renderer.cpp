@@ -57,8 +57,8 @@ void Renderer::render(Renderable& obj)
     int spriteWidth = obj.getSpriteWidth();
     int spriteHeight = obj.getSpriteHeight();
 
-    std::cout << "row: " << row << "\n";
-    std::cout << "column: " << column << "\n";
+    //std::cout << "row: " << row << "\n";
+    //std::cout << "column: " << column << "\n";
 
     if(!alreadyLoaded(obj))
         loadImage(filename);

@@ -15,6 +15,8 @@ public:
     int getDriveState();
     void calcAcceleration();
 
+    void setAngleTravel(double);
+    void setVelocity(double, double);
     void setVelocity(double);
     void setAcceleration(double);
     void setHealth(int);
@@ -27,12 +29,16 @@ public:
     int draw(sf::RenderWindow*);
     void sync();
 
-private:
+    bool collided;
 
+private:
     const int PI = 3.14159265359;
 
     double rotateSpeed;
+    double angleTravel;
     double velocity;
+    double velocityX;
+    double velocityY;
     double acceleration;
 
     ///properties
