@@ -17,8 +17,6 @@ public:
     void checkCollisions();
 
 private:
-    int width;
-    int height;
     sf::RenderWindow window;
     Renderer theRenderer;
     Car theCar;

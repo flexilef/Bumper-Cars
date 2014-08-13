@@ -53,20 +53,20 @@ void Renderer::render(Renderable& obj)
 
     int row = obj.getRow();
     int column = obj.getColumn();
-    double angle = obj.getAngle();
+    double angle = obj.getRenderAngle();
     int spriteWidth = obj.getSpriteWidth();
     int spriteHeight = obj.getSpriteHeight();
 
-    //std::cout << "row: " << row << "\n";
-    //std::cout << "column: " << column << "\n";
+    std::cout << "row: " << row << "\n";
+    std::cout << "column: " << column << "\n";
 
     if(!alreadyLoaded(obj))
         loadImage(filename);
 
     if(angle > 359)
-        obj.setAngle(0);
+        obj.setRenderAngle(0);
     else if(angle < 0)
-        obj.setAngle(359);
+        obj.setRenderAngle(359);
 
     obj.getCurrentSprite().setTexture(imageToTexture[filename]);
     obj.getCurrentSprite().setTextureRect(sf::IntRect(column*spriteWidth, row*spriteHeight, spriteWidth,spriteHeight));

@@ -3,10 +3,8 @@
 
 #include "Game.h"
 
-Game::Game(int w, int h) : theRenderer(&window), theCar(200, 200)
+Game::Game(int width, int height) : theRenderer(&window), theCar(400, 400)
 {
-    width = w;
-    height = h;
     window.create(sf::VideoMode(width, height), "Bumper Cars!!!");
 }
 
@@ -37,7 +35,7 @@ void Game::gameLoop()
         {
             handleUserInput();
             update();
-            checkCollisions();
+            //checkCollisions();
 
             //time stuff
             nextGameTick+=SKIP_TICKS;
@@ -52,13 +50,13 @@ void Game::gameLoop()
 
 void Game::update()
 {
-    theCar.drive();
+    //theCar.drive();
 }
 
 void Game::displayGame()
 {
     theRenderer.render(theCar);
-    //std::cout << "angle: " << theCar.getAngle() << "\n";
+    std::cout << "angle: " << theCar.getRenderAngle() << "\n";
 }
 
 void Game::handleUserInput()
@@ -66,7 +64,8 @@ void Game::handleUserInput()
     //UP = accelerate
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
-        theCar.setDriveState(1);
+        theCar.accelerate();
+        //theCar.setDriveState(1);
         //allow turning only when accelerating
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             theCar.turnRight();
@@ -76,7 +75,7 @@ void Game::handleUserInput()
     //reversing
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
     {
-        theCar.setDriveState(2);
+        theCar.applyReverse();
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             theCar.turnRight();
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -85,7 +84,7 @@ void Game::handleUserInput()
     //braking
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
     {
-        theCar.setDriveState(3);
+        theCar.applyBrakes();
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             theCar.turnRight();
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -94,7 +93,7 @@ void Game::handleUserInput()
     //no engine force
     else
     {
-        theCar.setDriveState(0);
+        theCar.decelerate();
 
         //still turn if the user wants to
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
@@ -110,52 +109,8 @@ void Game::handleUserInput()
     }
 }
 
-void Game::checkCollisions()
+/*void Game::checkCollisions()
 {
-    //RIGHT wall
-    if(theCar.getPosX() > width)
-    {
-        int angle = theCar.getAngle();
-
-        if((angle > 0 && angle < 90) || (angle > 270 && angle < 360))
-            theCar.setVelocity(-.1);
-        else
-            theCar.setVelocity(.1);
-    }
-    //LEFT wall
-    else if(theCar.getPosX() < 0)
-    {
-        int angle = theCar.getAngle();
-
-        if(angle > 90 && angle < 270)
-            theCar.setVelocity(-.1);
-        else
-            theCar.setVelocity(.1);
-    }
-    //BOTTOM wall
-    else if(theCar.getPosY() > height)
-    {
-        int angle = theCar.getAngle();
-
-        if(angle > 180 && angle < 360)
-            theCar.setVelocity(-.1);
-        else
-            theCar.setVelocity(.1);
-    }
-    //NORTH wall
-    else if(theCar.getPosY() < 0)
-    {
-        int angle = theCar.getAngle();
-
-        if(angle > 0 && angle < 180)
-            theCar.setVelocity(-.1);
-        else
-            theCar.setVelocity(.1);
-    }
-
-    //std::cout << "DriveState: " << theCar.getDriveState() << "\n";
-
-    /*
     if(Collision::BoundingBoxTest(theCar.getCurrentSprite(), car.getCurrentSprite()))
     {
         //std::cout << "Collided!\n";
@@ -165,5 +120,4 @@ void Game::checkCollisions()
     }
     //else
     //std::cout << "NOT Collided!\n";
-    */
-}
+}*/

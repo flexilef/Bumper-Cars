@@ -16,15 +16,15 @@ sf::Sprite& Renderable::getCurrentSprite()
 
 double Renderable::getPosX()
 {
-    return posX;
+    return position.x;
 }
 double Renderable::getPosY()
 {
-    return posY;
+    return position.y;
 }
-double Renderable::getAngle()
+double Renderable::getRenderAngle()
 {
-    return angle;
+    return renderAngle;
 }
 int Renderable::getRow()
 {
@@ -45,17 +45,17 @@ int Renderable::getSpriteWidth()
 
 void Renderable::setPosition(double x, double y)
 {
-    posX = x;
-    posY = y;
+    position.x = x;
+    position.y = y;
 }
-void Renderable::setAngle(double theta)
+void Renderable::setRenderAngle(double theta)
 {
-    angle = theta;
+    renderAngle = theta;
 }
 
 void Renderable::sync()
 {
-    row = angle/anglePerRow;
-    column = (angle-(anglePerRow*row)) / anglePerSprite;
-    currentSprite.setPosition(posX,posY);
+    row = renderAngle/anglePerRow;
+    column = (renderAngle-(anglePerRow*row)) / anglePerSprite;
+    currentSprite.setPosition(position.x,position.y);
 }

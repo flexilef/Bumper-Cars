@@ -11,9 +11,9 @@ public:
     //object info
     double getPosX();
     double getPosY();
-    double getAngle();
+    double getRenderAngle();
     void setPosition(double, double);
-    void setAngle(double);
+    void setRenderAngle(double);
 
     //sprite sheet info
     int getRow();
@@ -28,9 +28,8 @@ public:
 
 protected:
     //object info
-    double posX;
-    double posY;
-    double angle;
+    sf::Vector2f position;
+    int renderAngle;
 
     //sprite sheet info
     int row;
