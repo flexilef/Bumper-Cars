@@ -13,14 +13,19 @@ public:
     ///accessors
     double getVelocity();
     double getAcceleration();
+    int getTravelAngle();
     int getDriveState();
+    int getMass();
 
     ///mutators
     void setVelocity(double);
     void setAcceleration(double);
     void setDriveState(int);
+    void setMass(int);
+    void setTravelAngle(int);
 
     ///actions
+    void update();
     void accelerate();
     void decelerate();
     void applyBrakes();

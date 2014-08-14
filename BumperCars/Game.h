@@ -17,8 +17,11 @@ public:
     void checkCollisions();
 
 private:
+    int width;
+    int height;
     sf::RenderWindow window;
     Renderer theRenderer;
+    std::vector<Car> theCars;
     Car theCar;
     Car car;
 };

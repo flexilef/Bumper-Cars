@@ -3,8 +3,12 @@
 
 #include "Game.h"
 
-Game::Game(int width, int height) : theRenderer(&window), theCar(400, 400)
+Game::Game(int w, int h) : theRenderer(&window)
 {
+    width = w;
+    height = h;
+    theCar.setPosition(200, 200);
+    car.setPosition(400, 400);
     window.create(sf::VideoMode(width, height), "Bumper Cars!!!");
 }
 
@@ -33,7 +37,7 @@ void Game::gameLoop()
 
         while(myClock.getElapsedTime().asMilliseconds() > nextGameTick && loops < MAX_FRAMESKIP)
         {
-            handleUserInput();
+            //handleUserInput();
             update();
             //checkCollisions();
 
@@ -50,13 +54,18 @@ void Game::gameLoop()
 
 void Game::update()
 {
-    //theCar.drive();
+    theCar.dump();
+
+    theCar.update();
+    car.update();
+    handleUserInput();
+    checkCollisions();
 }
 
 void Game::displayGame()
 {
     theRenderer.render(theCar);
-    std::cout << "angle: " << theCar.getRenderAngle() << "\n";
+    theRenderer.render(car);
 }
 
 void Game::handleUserInput()
@@ -90,7 +99,7 @@ void Game::handleUserInput()
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
             theCar.turnLeft();
     }
-    //no engine force
+    //no user input let the car decelerate naturally
     else
     {
         theCar.decelerate();
@@ -109,15 +118,21 @@ void Game::handleUserInput()
     }
 }
 
-/*void Game::checkCollisions()
+void Game::checkCollisions()
 {
     if(Collision::BoundingBoxTest(theCar.getCurrentSprite(), car.getCurrentSprite()))
     {
-        //std::cout << "Collided!\n";
-        double velocity = theCar.getVelocity()/2;
-        theCar.setVelocity(-20);
-        car.setVelocity(velocity);
+        std::cout << "Collided!\n";
+        double vel1 = theCar.getVelocity();
+        double vel2 = car.getVelocity();
+
+        int angle1 = theCar.getTravelAngle();
+        int angle2 = car.getTravelAngle();
+
+        theCar.setTravelAngle(90);
+        theCar.setDriveState(4);
+        theCar.setVelocity(2);
+        car.setVelocity(0);
+        car.setTravelAngle(270);
     }
-    //else
-    //std::cout << "NOT Collided!\n";
-}*/
+}

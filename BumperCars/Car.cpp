@@ -52,11 +52,34 @@ Car::Car(int x, int y)
     column = (renderAngle-(anglePerRow*row)) / anglePerSprite;
 }
 
+void Car::update()
+{
+    //if we are not accelerating/reversing/braking
+    if(driveState != 4 && driveState != 0)
+    {
+        //move according to where we are facing
+        position.x += velocity*cos(renderAngle*PI/180.0);
+        position.y -= velocity*sin(renderAngle*PI/180.0);
+    }
+    else
+    {
+        position.x += velocity*cos(travelAngle*PI/180.0);
+        position.y -= velocity*sin(travelAngle*PI/180.0);
+    }
+}
+
 void Car::accelerate()
 {
+    //if(driveState != 4)
+    //update driveState
+    driveState = 1;
+
+    //need to travel where you're facing
+    travelAngle = renderAngle;
+
     forceTraction = ENGINE_FORCE;
 
-    //calculating the forces
+    //calculating the resistance forces
     forceDrag = -DRAG * velocity * velocity;
     forceRollingResistance = -ROLL_RESISTANCE * velocity;
     forceLongitudinal = forceTraction + forceDrag + forceRollingResistance;
@@ -64,15 +87,19 @@ void Car::accelerate()
     acceleration = forceLongitudinal/mass;
     velocity+=acceleration;
 
-    position.x += velocity*cos(renderAngle*PI/180.0);
-    position.y -= velocity*sin(renderAngle*PI/180.0);
+    //only accelerate at renderAngle
+    //position.x += velocity*cos(renderAngle*PI/180.0);
+    //position.y -= velocity*sin(renderAngle*PI/180.0);
 }
 
 void Car::decelerate()
 {
+    //update driveState
+    driveState = 0;
+
     forceTraction = 0;
 
-    //calculating the forces
+    //calculating the resistance forces
     forceDrag = -DRAG * velocity * velocity;
     forceRollingResistance = -ROLL_RESISTANCE * velocity;
     forceLongitudinal = forceTraction + forceDrag + forceRollingResistance;
@@ -85,18 +112,22 @@ void Car::decelerate()
         velocity = maxBackVelocity;
     }
 
-    position.x += velocity*cos(travelAngle*PI/180.0);
-    position.y -= velocity*sin(travelAngle*PI/180.0);
+    //always decelerate where we are heading
+    //position.x += velocity*cos(travelAngle*PI/180.0);
+    //po1sition.y -= velocity*sin(travelAngle*PI/180.0);
 }
 
 void Car::applyBrakes()
 {
+    //update driveState
+    driveState = 3;
+
     //going forwards
     if(velocity > 0)
     {
         forceBreak = -BREAK;
 
-        //calculating the forces
+        //calculating the resistance forces
         forceDrag = -DRAG * velocity * velocity;
         forceRollingResistance = -ROLL_RESISTANCE * velocity;
         forceLongitudinal = forceBreak + forceDrag + forceRollingResistance;
@@ -106,7 +137,7 @@ void Car::applyBrakes()
     {
         forceBreak = BREAK;
 
-        //calculating the forces
+        //calculating the resistance forces
         forceDrag = -DRAG * velocity * velocity;
         forceRollingResistance = -ROLL_RESISTANCE * velocity;
         forceLongitudinal = forceBreak + forceDrag + forceRollingResistance;
@@ -115,18 +146,22 @@ void Car::applyBrakes()
     acceleration = forceLongitudinal/mass;
 
     if(velocity > -.1 && velocity < .1)
-    {
         velocity = 0;
-    }
     else
         velocity+=acceleration;
 
-    position.x += velocity*cos(renderAngle*PI/180.0);
-    position.y -= velocity*sin(renderAngle*PI/180.0);
+    //position.x += velocity*cos(renderAngle*PI/180.0);
+    //position.y -= velocity*sin(renderAngle*PI/180.0);
 }
 
 void Car::applyReverse()
 {
+    //update driveState
+    driveState = 2;
+
+    //need to travel where you're facing
+    travelAngle = renderAngle;
+
     forceTraction = -ENGINE_FORCE;
 
     //calculating the forces
@@ -137,22 +172,23 @@ void Car::applyReverse()
     acceleration = forceLongitudinal/mass;
     velocity+=acceleration;
 
-    position.x += velocity*cos(renderAngle*PI/180.0);
-    position.y -= velocity*sin(renderAngle*PI/180.0);
+    //only accelerate in the opposite direction of where we are facing
+    //position.x += velocity*cos(renderAngle*PI/180.0);
+    //position.y -= velocity*sin(renderAngle*PI/180.0);
 }
 
 //constantly driving
 void Car::dump()
 {
-    //std::cout << "angle: " << angle << "\n";
-    //std::cout << "AngularV: " << rotateSpeed << "\n";
+    std::cout << "angleRender: " << renderAngle << "\n";
+    std::cout << "AngleTravel: " << travelAngle << "\n";
     //std::cout << "longitudinal: " << forceLongitudinal << "\n";
     //std::cout << "drag: " << forceDrag << "\n";
     //std::cout << "rollr: " << forceRollingResistance << "\n";
     //std::cout << "tract: " << forceTraction << "\n";
     //std::cout << "velocity: " << velocity << "\n";
     //std::cout << "acceleration: " << acceleration << "\n";
-    //std::cout << "driveState: " << driveState << "\n";
+    std::cout << "driveState: " << driveState << "\n";
 }
 
 void Car::setDriveState(int state)
@@ -161,6 +197,7 @@ void Car::setDriveState(int state)
     //1 = accelerating
     //2 = reverse
     //3 = break
+    //4 = collided
     driveState = state;
 }
 
@@ -173,6 +210,8 @@ void Car::turnRight()
     rotateSpeed = .5*velocity;
 
     renderAngle-=rotateSpeed;
+
+    //moment we turn the travel angle needs to be the same as renderAngle
     travelAngle = renderAngle;
 }
 
@@ -185,6 +224,8 @@ void Car::turnLeft()
     rotateSpeed = .5*velocity;
 
     renderAngle+=rotateSpeed;
+
+    //moment we turn the travel angle needs to be the same as renderAngle
     travelAngle = renderAngle;
 }
 
@@ -198,9 +239,19 @@ double Car::getAcceleration()
     return acceleration;
 }
 
+int Car::getTravelAngle()
+{
+    return travelAngle;
+}
+
 void Car::setVelocity(double v)
 {
     velocity = v;
+}
+
+void Car::setTravelAngle(int theta)
+{
+    travelAngle = theta;
 }
 
 int Car::getDriveState()
