@@ -180,15 +180,15 @@ void Car::applyReverse()
 //constantly driving
 void Car::dump()
 {
-    std::cout << "angleRender: " << renderAngle << "\n";
-    std::cout << "AngleTravel: " << travelAngle << "\n";
+    //std::cout << "angleRender: " << renderAngle << "\n";
+    //std::cout << "AngleTravel: " << travelAngle << "\n";
     //std::cout << "longitudinal: " << forceLongitudinal << "\n";
     //std::cout << "drag: " << forceDrag << "\n";
     //std::cout << "rollr: " << forceRollingResistance << "\n";
     //std::cout << "tract: " << forceTraction << "\n";
     //std::cout << "velocity: " << velocity << "\n";
     //std::cout << "acceleration: " << acceleration << "\n";
-    std::cout << "driveState: " << driveState << "\n";
+    //std::cout << "driveState: " << driveState << "\n";
 }
 
 void Car::setDriveState(int state)
@@ -237,6 +237,11 @@ double Car::getVelocity()
 double Car::getAcceleration()
 {
     return acceleration;
+}
+
+int Car::getMass()
+{
+    return mass;
 }
 
 int Car::getTravelAngle()

@@ -5,16 +5,20 @@
 #include "Collision.h"
 #include "Car.h"
 #include "Renderer.h"
+#include <cmath>
 
 class Game
 {
 public:
+    const int PI = 3.14159265359;
+
     Game(int, int);
     void gameLoop();
     void handleUserInput();
     void displayGame();       //renders gameObjects
     void update();          //updates gameObjects
     void checkCollisions();
+    void applyCollision(Car&, Car&);
 
 private:
     int width;

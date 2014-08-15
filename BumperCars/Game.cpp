@@ -7,8 +7,8 @@ Game::Game(int w, int h) : theRenderer(&window)
 {
     width = w;
     height = h;
-    theCar.setPosition(200, 200);
-    car.setPosition(400, 400);
+    theCar.setPosition(100, 100);
+    car.setPosition(200, 200);
     window.create(sf::VideoMode(width, height), "Bumper Cars!!!");
 }
 
@@ -123,16 +123,67 @@ void Game::checkCollisions()
     if(Collision::BoundingBoxTest(theCar.getCurrentSprite(), car.getCurrentSprite()))
     {
         std::cout << "Collided!\n";
-        double vel1 = theCar.getVelocity();
-        double vel2 = car.getVelocity();
 
-        int angle1 = theCar.getTravelAngle();
-        int angle2 = car.getTravelAngle();
+        applyCollision(theCar, car);
+        //double vel1 = theCar.getVelocity();
+        //double vel2 = car.getVelocity();
 
-        theCar.setTravelAngle(90);
-        theCar.setDriveState(4);
-        theCar.setVelocity(2);
-        car.setVelocity(0);
-        car.setTravelAngle(270);
+        //int angle1 = theCar.getTravelAngle();
+        //int angle2 = car.getTravelAngle();
+
+        //theCar.setTravelAngle(90);
+        //theCar.setDriveState(4);
+        //theCar.setVelocity(2);
+        //car.setVelocity(0);
+        //car.setTravelAngle(270);
     }
+}
+
+void Game::applyCollision(Car& car1, Car& car2)
+{
+    int angle1 = car1.getTravelAngle();
+    int angle2 = car2.getTravelAngle();
+
+    sf::Vector2f unitVector1(cos(angle1*PI/180), sin(angle1*PI/180));
+    sf::Vector2f unitVector2(cos(angle1*PI/180), sin(angle1*PI/180));
+
+    int mass1 = car1.getMass();
+    int mass2 = car2.getMass();
+    int massTotal = mass1 + mass2;
+
+    double posX1 = car1.getPosX();
+    double posY1 = car1.getPosY();
+    double posX2 = car2.getPosX();
+    double posY2 = car2.getPosY();
+
+    double vel1 = car1.getVelocity();
+    double vel2 = car2.getVelocity();
+
+    double momentumInit1X = mass1 * vel1 * unitVector1.x;
+    double momentumInit2X = mass2 * vel2 * unitVector2.x;
+
+    double momentumInit1Y = mass1 * vel1 * unitVector1.y;
+    double momentumInit2Y = mass2 * vel2 * unitVector2.y;
+
+    double momentumTotalInitX = momentumInit1X + momentumInit2X;
+    double momentumTotalInitY = momentumInit1Y + momentumInit2Y;
+
+    double velFinalX = momentumTotalInitX/massTotal;
+    double velFinalY = momentumTotalInitY/massTotal;
+
+    double velFinal = sqrt(velFinalX * velFinalX + velFinalY * velFinalY)*2;
+    double angleFinal = tan(velFinalY/velFinalX)*10;
+
+    car1.setDriveState(4);
+    car2.setDriveState(4);
+
+    //NEED to separate (minimum distance) before setting cars off on their ways
+    car1.setTravelAngle(angle2);
+    car2.setTravelAngle(angle1);
+
+    car1.setVelocity(vel2);
+    car2.setVelocity(vel1);
+
+    std::cout << "car1: " << theCar.getTravelAngle() << "\n";
+    std::cout << "car2: " << car.getTravelAngle() << "\n";
 }
