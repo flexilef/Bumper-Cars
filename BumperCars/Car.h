@@ -10,6 +10,9 @@ public:
     Car();
     Car(int, int);
 
+    sf::Vector2f velocity;
+    sf::Vector2f acceleration;
+
     ///accessors
     double getVelocity();
     double getAcceleration();
@@ -19,6 +22,7 @@ public:
 
     ///mutators
     void setVelocity(double);
+    void setVelocity(double, double);
     void setAcceleration(double);
     void setDriveState(int);
     void setMass(int);
@@ -45,8 +49,8 @@ private:
     const int PI = 3.14159265359;
 
     double rotateSpeed;
-    double velocity;
-    double acceleration;
+    //sf::Vector2f velocity;
+    //sf::Vector2f acceleration;
 
     ///properties
     double maxBackVelocity;
@@ -56,19 +60,19 @@ private:
     int driveState;
 
     ///Driving forces and angles
-    double forceTraction;
-    double forceDrag;
-    double forceRollingResistance;
-    double forceBreak;
-    double forceLongitudinal;
+    sf::Vector2f forceTraction;
+    sf::Vector2f forceDrag;
+    sf::Vector2f forceRollingResistance;
+    sf::Vector2f forceBreak;
+    sf::Vector2f forceLongitudinal;
     int travelAngle;
     sf::Vector2f travelDirVector;
     sf::Vector2f facingDirVector;
 
-    const double ENGINE_FORCE = 150;
+    const double ENGINE_FORCE = 200;
     const double BREAK = 300;
-    const double ROLL_RESISTANCE = 12.8;
-    const double DRAG = 0.4257;
+    const double ROLL_RESISTANCE = 15;
+    const double DRAG = .5;
     int mass;
 
     ///image properties

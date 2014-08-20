@@ -7,8 +7,8 @@ Game::Game(int w, int h) : theRenderer(&window)
 {
     width = w;
     height = h;
-    theCar.setPosition(100, 100);
-    car.setPosition(200, 200);
+    theCar.setPosition(200, 300);
+    car.setPosition(0, 0);
     window.create(sf::VideoMode(width, height), "Bumper Cars!!!");
 }
 
@@ -105,7 +105,7 @@ void Game::handleUserInput()
         theCar.decelerate();
 
         //still turn if the user wants to
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        /*if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
             if(theCar.getVelocity() > 1)
                 theCar.turnRight();
@@ -114,7 +114,7 @@ void Game::handleUserInput()
         {
             if(theCar.getVelocity() > 1)
                 theCar.turnLeft();
-        }
+        }*/
     }
 }
 
